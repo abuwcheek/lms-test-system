@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %} Test natijalari {% endblock title %}
+
+
+{% block content %}
+
+<div class="min-h-screen bg-gray-100 py-10 px-4 flex justify-center">
+     <div class="bg-white shadow-xl rounded-2xl p-8 max-w-3xl w-full">
+     <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Imtihon natijalarini ko'rish</h2>
+
+     <div class="grid grid-cols-2 gap-4 text-left text-gray-700 text-base mb-6">
+          <div><strong>To'g'ri javoblar:</strong> {{ correct_count }}</div>
+          <div><strong>Xato javoblar:</strong> {{ incorrect_count }}</div>
+          <div><strong>Jami savollar:</strong> {{ total }}</div>
+          <div><strong>Natija (%):</strong> {{ percentage }}%</div>
+          <div><strong>Ball:</strong> {{ score }}</div>
+     </div>
+
+     {% if percentage >= 60 %}
+          <div class="text-green-600 text-xl font-semibold mb-6 flex items-center justify-center">
+          ✅ Tabriklaymiz! Siz imtihondan o'tdingiz! 😄
+          </div>
+     {% else %}
+          <div class="text-red-500 text-xl font-semibold mb-6 flex items-center justify-center">
+          ❌ Afsuski, siz imtihondan o'ta olmadingiz. 😞
+          </div>
+     {% endif %}
+
+     <ol class="space-y-6">
+          {% for user_answer in user_answers %}
+          <li class="bg-gray-50 p-5 rounded-xl border border-gray-200">
+          <p class="text-gray-800 font-medium mb-2">{{ forloop.counter }}. {{ user_answer.question.text }}</p>
+          <ul class="space-y-2">
+               {% for answer in user_answer.question.answers.all %}
+               <li class="px-4 py-2 rounded-xl
+               {% if answer.id == user_answer.selected_answer.id %}
+               {% if answer.is_correct %} bg-green-100 border-l-4 border-green-500
+               {% else %} bg-red-100 border-l-4 border-red-500
+               {% endif %}
+               {% elif answer.is_correct %} bg-green-50
+               {% else %} bg-white
+               {% endif %}">
+               {{ answer.text }}
+               {% if answer.id == user_answer.selected_answer.id %} <strong>(Siz tanladingiz)</strong>{% endif %}
+               {% if answer.is_correct %} <span class="text-green-600 font-semibold">(To'g'ri javob)</span>{% endif %}
+               </li>
+               {% endfor %}
+          </ul>
+          </li>
+          {% endfor %}
+     </ol>
+
+     <div class="text-center mt-10">
+          <a href="/" class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl transition">Bosh sahifaga qaytish</a>
+     </div>
+     </div>
+</div>
+{% endblock %}
